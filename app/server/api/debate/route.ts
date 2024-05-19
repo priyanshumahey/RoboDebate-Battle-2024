@@ -24,10 +24,14 @@ export async function POST(request: Request) {
 	var messages = []
 
 	// The bots will be arguing against each other about the prompt. The first bot will be for the prompt and the second bot will be against the prompt.
-	const botOneMessage = `You are to participate in a debate and your goal is to argue in favor of the prompt. 
+	const optionOne = `You are to participate in a debate and your goal is to argue in favor of the prompt. 
 		The prompt is: ${prompt}. Your response should be at roughly 100 words.`;
-	const botTwoMessage = `You are to participate in a debate and your goal is to argue against the prompt. 
+	const optionTwo = `You are to participate in a debate and your goal is to argue against the prompt. 
 		The prompt is: ${prompt}. Your response should be at roughly 100 words.`;
+
+	const botOneMessage = getRandomElement([optionOne, optionTwo]);
+	// The other bot will be against the prompt
+	const botTwoMessage = botOneMessage === optionOne ? optionTwo : optionOne;
 
 	try {
 		const genAI = new GoogleGenerativeAI(apiKeyG);
@@ -38,11 +42,15 @@ export async function POST(request: Request) {
 			modelName: "gpt-4o",
 		})
 
+		messages.push({ role: "bota", text: "I am arguing " + (botOneMessage === optionOne ? "for" : "against")});
+
 		// Generate the first message for bot A
 		const result = await geminiModel.generateContent(botOneMessage);
 		const response = await result.response;
 		const text = response.text();
 		messages.push({ role: "bota", text: text });
+
+		messages.push({ role: "botb", text: "I am arguing " + (botTwoMessage === optionOne ? "for" : "against")});
 
 		// Generate the first message for bot B
 		const result2 = await gptModel.invoke(botTwoMessage);
