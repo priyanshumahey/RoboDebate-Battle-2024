@@ -36,14 +36,19 @@ const UserSchema = z.object({
 	})
 })
 
-const StageList = ["gamepinStage", "playerStage"] as const
+const StageList = ["gamepinStage", "playerStage", "gameStage", "judgeStage"] as const
 
 const PlayerTypes = ["judge", "gambler"] as const
+
+const TotalPoints = 10
 
 export default function Login() {
 	const [stage, setStage] = useState<typeof StageList[number]>("gamepinStage")
 	const [username, setUsername] = useState("")
 	const [role, setRole] = useState<typeof PlayerTypes[number]>("gambler")
+	const [count, setCount] = useState(TotalPoints)
+	const [points, setPoints] = useState(0)
+	const [stockOption, setStockOption] = useState("")
 
 	const form = useForm<z.infer<typeof GameSchema>>({
 		resolver: zodResolver(GameSchema),
@@ -96,6 +101,26 @@ export default function Login() {
 			})
 		}
 		setUsername(data.username)
+		if (role === "judge") {
+			setStage("judgeStage")
+		} else {
+			setStage("gameStage")
+		}
+	}
+
+	function changeCount(value: number) {
+		var newCount = count + value
+		if (newCount < 0) {
+			newCount = 0
+		} else if (newCount > TotalPoints) {
+			newCount = TotalPoints
+		}
+	
+		setCount(newCount)
+	}
+
+	function sumbitJudge(option: string) {
+		console.log(option)
 	}
 
 	return (
@@ -113,7 +138,7 @@ export default function Login() {
 					<div className="flex justify-center">
 
 						<Form {...form}>
-							<form onSubmit={form.handleSubmit(onSubmit)} className="w-1/5 flex flex-col text-center">
+							<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col text-center">
 								<h1 className="text-4xl font-bold w-full">Big AI Battle!</h1>
 								<Card className="flex flex-col justify-center rounded-none mt-6 ">
 									<CardContent>
@@ -202,6 +227,55 @@ export default function Login() {
 					</div>
 				</div>
 			</Transition >
+			<Transition
+				show={stage === "gameStage"}
+				enter="transition-opacity ease-linear duration-300"
+				enterFrom="opacity-0"
+				enterTo="opacity-100"
+				leave="transition-opacity ease-linear duration-300"
+				leaveFrom="opacity-100"
+				leaveTo="opacity-0"
+			>
+				<div className="flex flex-col justify-center h-[100vh]">
+					<div className="text-center">
+						<h1 className="text-4xl font-bold w-full">Welcome, <span className="underline text-violet-500">{username}</span>!</h1>
+						<h2 className="text-2xl font-bold w-full">You are a <span className="text-violet-400">{role}</span>.</h2>
+						<h2 className="text-2xl font-bold w-full mt-8">You have {TotalPoints - points} points left.</h2>
+						<h2 className="text-2xl font-bold w-full mt-8">Which option would you like?</h2>
+						<div className="flex justify-center mt-6">
+							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border">Choice A</Button>
+							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border">Choice B</Button>
+						</div>
+						<div>
+							<Button className="m-4" onClick={()=> changeCount(1)}>-</Button>
+								<span className="m-4">{TotalPoints - count}</span>
+							<Button className="m-4" onClick={()=> changeCount(-1)}>+</Button>
+						</div>
+						<Button className="m-4 w-4/5 sm:w-1/4 rounded-none bg-violet-500 hover:bg-violet-700 border">Submit</Button>
+					</div>
+				</div>
+			</Transition>
+			<Transition
+				show={stage === "judgeStage"}
+				enter="transition-opacity ease-linear duration-300"
+				enterFrom="opacity-0"
+				enterTo="opacity-100"
+				leave="transition-opacity ease-linear duration-300"
+				leaveFrom="opacity-100"
+				leaveTo="opacity-0"
+			>
+				<div className="flex flex-col justify-center h-[100vh]">
+					<div className="text-center">
+						<h1 className="text-4xl font-bold w-full">Welcome, <span className="underline text-violet-500">{username}</span>!</h1>
+						<h2 className="text-2xl font-bold w-full">You are a <span className="text-violet-400">{role}</span>.</h2>
+						<h2 className="text-2xl font-bold w-full mt-8">Which chatbot won?</h2>
+						<div className="flex justify-center mt-6">
+							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("A")}>Choice A</Button>
+							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("B")}>Choice B</Button>
+						</div>
+					</div>
+				</div>
+			</Transition>
 		</>
 	)
 }
