@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { useState } from "react"
 
 const FormSchema = z.object({
 	prompt: z.string().min(1,
@@ -26,6 +27,7 @@ const FormSchema = z.object({
 })
 
 export default function Home() {
+	const [modelMessage, setModelMessage] = useState<string>("")
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -35,14 +37,14 @@ export default function Home() {
 	})
 
 	function onSubmit(data: z.infer<typeof FormSchema>) {
-		// toast({
-		// 	title: "You submitted the following values:",
-		// 	description: (
-		// 		<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-		// 			<code className="text-white">{JSON.stringify(data, null, 2)}</code>
-		// 		</pre>
-		// 	),
-		// })
+		toast({
+			title: "You submitted the following values:",
+			description: (
+				<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+					<code className="text-white">{JSON.stringify(data, null, 2)}</code>
+				</pre>
+			),
+		})
 
 		async function queryModel() {
 			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/query-model`, {
@@ -53,20 +55,13 @@ export default function Home() {
 				body: JSON.stringify(data),
 			})
 			const json = await response.json()
-			toast({
-				title: "API Response",
-				description: (
-					<pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-						<code className="text-white">{JSON.stringify(json, null, 2)}</code>
-					</pre>
-				),
-			})
+			setModelMessage(json['text'])
 		}
 		queryModel()
 	}
 
 	return (
-		<div className="flex flex-col justify-center h-[100vh]">
+		<div className="flex flex-col justify-center min-h-[100vh]">
 			<div className="flex justify-center">
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 max-w-[500px] space-y-6">
@@ -129,6 +124,15 @@ export default function Home() {
 						<Button type="submit">Submit</Button>
 					</form>
 				</Form>
+			</div>
+			<div className="flex justify-center">
+				{modelMessage && (
+					<div className="mt-6 sm:w-1/3 w-4/5 max-w-[500px] space-y-6 bg-slate-100 p-4">
+						<p className="text-2xl font-semibold">Model Response</p>
+						<p>{modelMessage}</p>
+						<Button onClick={() => setModelMessage("")}>Clear</Button>
+					</div>
+				)}
 			</div>
 		</div>
 	);

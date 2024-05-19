@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server'
-import { GoogleGenerativeAI } from '@google/generative-ai'
 import { ChatOpenAI } from "@langchain/openai";
 
 export async function POST(request: Request) {
