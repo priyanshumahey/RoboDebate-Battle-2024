@@ -31,11 +31,11 @@ export async function POST(request: Request) {
 
 	try {
 		const genAI = new GoogleGenerativeAI(apiKeyG);
-		const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+		const geminiModel = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
 		const gptModel = new ChatOpenAI({
 			apiKey: apiKeyO,
-			modelName: "gpt-4",
+			modelName: "gpt-4o",
 		})
 
 		// Generate the first message for bot A
