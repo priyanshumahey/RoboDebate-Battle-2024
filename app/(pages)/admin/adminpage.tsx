@@ -99,6 +99,28 @@ export function AdminPage() {
 		postData();
 	}
 
+	function clearVoters() {
+		async function postData() {
+			try {
+				const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/judges`, {
+					method: 'DELETE',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				}				
+			);
+			if (response.status === 200) {
+				toast({
+					title: "Voters Cleared",
+					description: "All voters have been cleared.",
+				})
+			}
+			} catch (error) {
+				console.error('Error posting data:', error);
+			}
+		}
+		postData();
+	}
 
 	return (
 		<div className="justify-center w-full">
@@ -154,6 +176,7 @@ export function AdminPage() {
 								</FormItem>
 							)}
 						/>
+							<Button type="button" className="w-full rounded-none mt-4" onClick={clearVoters}>Clear Voters</Button>
 							<Button type="submit" className="w-full rounded-none mt-4">Enter</Button>
 					</form>
 				</Form>

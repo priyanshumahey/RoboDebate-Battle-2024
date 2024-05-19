@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { ChatMessageBubble } from '@/components/ChatBot/ChatMessageBubble';
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 interface chatWindowProps {
     emptyStateComponent: ReactElement
@@ -10,6 +11,8 @@ interface chatWindowProps {
 
 export function ChatWindow(props: chatWindowProps) {
     const messageContainerRef = useRef<HTMLDivElement | null>(null);
+    const [alreadyClickedReveal, setAlreadyClickedReveal] = useState(false);
+    const [alreadyClicked, setAlreadyClicked] = useState(false);
     const [prompt, setPrompt] = useState("");
 
     const [messages, setMessages] = useState([
@@ -40,7 +43,7 @@ export function ChatWindow(props: chatWindowProps) {
             });
             setMessages(newMessages);
         }
-
+        setAlreadyClicked(true);
         fetchMessages();
     }
     
@@ -63,6 +66,24 @@ export function ChatWindow(props: chatWindowProps) {
         });
     }, []);
 
+    const revealAI = () => {
+        const newMessages = [...messages];
+        newMessages.push({
+            role: "bota",
+            text: "I am powered by Google Gemini",
+        });
+        newMessages.push({
+            role: "botb",
+            text: "I am powered by OpenAI GPT",
+        });
+        setMessages(newMessages);
+
+        if (messageContainerRef.current) {
+            messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+        }
+        setAlreadyClickedReveal(true);
+    }
+
 
     return (
         <div className={`flex flex-col items-center rounded grow overflow-hidden`}>
@@ -84,7 +105,11 @@ export function ChatWindow(props: chatWindowProps) {
                     ""
                 )}
             </div>
-            <Button onClick={prepNextStage}>Next</Button>
+            <div className="flex flex-row w-1/3 space-x-10">
+                <Button onClick={prepNextStage} className="w-full" disabled={alreadyClicked}>Next</Button>
+                <Button onClick={revealAI} className="w-full" disabled={alreadyClickedReveal}>Reveal</Button>
+            </div>
+            {(alreadyClickedReveal && alreadyClicked) ? <Button className="w-1/3 mt-4"><Link href="/results">View Results</Link></Button> : ""}
         </div>
     );
 }

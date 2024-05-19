@@ -48,6 +48,7 @@ export default function Login() {
 	const [role, setRole] = useState<typeof PlayerTypes[number]>("gambler")
 	const [count, setCount] = useState(TotalPoints)
 	const [points, setPoints] = useState(0)
+	const [showConfirmation, setShowConfirmation] = useState<string>("")
 	const [stockOption, setStockOption] = useState("")
 
 	const form = useForm<z.infer<typeof GameSchema>>({
@@ -120,7 +121,33 @@ export default function Login() {
 	}
 
 	function sumbitJudge(option: string) {
-		console.log(option)
+		setShowConfirmation(option)
+	}
+
+	function submitVote() {
+		fetch(`${process.env.NEXT_PUBLIC_API_URL}/judges`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(
+				{ 
+					vote: showConfirmation,
+					username: username
+				}),
+		}).then(() => {
+			toast({
+				title: "Vote Submitted!",
+				description: "Your vote has been submitted.",
+			})
+			setShowConfirmation("")
+		}).catch(() => {
+			toast({
+				title: "Vote Failed!",
+				description: "There was an error submitting your vote.",
+				variant: "destructive"
+			})
+		})
 	}
 
 	return (
@@ -273,6 +300,7 @@ export default function Login() {
 							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("A")}>Bot A</Button>
 							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("B")}>Bot B</Button>
 						</div>
+						{showConfirmation ? <Button className="m-4 w-4/5 sm:w-1/4 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={submitVote}>Submit {showConfirmation}</Button> : ""}
 					</div>
 				</div>
 			</Transition>

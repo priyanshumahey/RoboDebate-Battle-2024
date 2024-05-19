@@ -23,10 +23,6 @@ export async function POST(request: Request) {
 
 	var messages = []
 
-	const privatization = ['bota', 'botb'];
-	const botOne = getRandomElement(privatization);
-	const botTwo = privatization.filter(bot => bot !== botOne)[0];
-
 	// The bots will be arguing against each other about the prompt. The first bot will be for the prompt and the second bot will be against the prompt.
 	const botOneMessage = `You are to participate in a debate and your goal is to argue in favor of the prompt. 
 		The prompt is: ${prompt}. Your response should be at roughly 100 words.`;
@@ -46,23 +42,34 @@ export async function POST(request: Request) {
 		const result = await geminiModel.generateContent(botOneMessage);
 		const response = await result.response;
 		const text = response.text();
-		messages.push({ role: botOne, text: text });
+		messages.push({ role: "bota", text: text });
 
 		// Generate the first message for bot B
 		const result2 = await gptModel.invoke(botTwoMessage);
 		const text2 = result2.content
-		messages.push({ role: botTwo, text: text2 });
+		messages.push({ role: "botb", text: text2 });
 	
 		// Generate a rebuttal for bot A
-		const result3 = await geminiModel.generateContent(`Your opponent said the following, please create a rebuttal: ${text2}`);
+		const result3 = await geminiModel.generateContent(`Your opponent said the following, please create a rebuttal: ${text2}. Keep it short and sweet.`);
 		const response3 = await result3.response;
 		const text3 = response3.text();
-		messages.push({ role: botOne, text: text3 });
+		messages.push({ role: "bota", text: text3 });
 
 		// Generate a rebuttal for bot B
-		const result4 = await gptModel.invoke(`Your opponent said the following, please create a rebuttal: ${text}`);
+		const result4 = await gptModel.invoke(`Your opponent said the following, please create a rebuttal: ${text}. Keep it short and sweet.`);
 		const text4 = result4.content
-		messages.push({ role: botTwo, text: text4 });
+		messages.push({ role: "botb", text: text4 });
+
+		// Generate a closing statement for bot A
+		const result5 = await geminiModel.generateContent(`Your opponent said the following, please create a closing statement: ${text4}. Keep it short and sweet.`);
+		const response5 = await result5.response;
+		const text5 = response5.text();
+		messages.push({ role: "bota", text: text5 });
+
+		// Generate a closing statement for bot B
+		const result6 = await gptModel.invoke(`Your opponent said the following, please create a closing statement: ${text3}. Keep it short and sweet.`);
+		const text6 = result6.content
+		messages.push({ role: "botb", text: text6 });
 
 		return NextResponse.json({ messages: messages }, { status: 200 })
 
