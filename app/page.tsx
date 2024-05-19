@@ -66,68 +66,70 @@ export default function Home() {
 	}
 
 	return (
-		<div>
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-					<FormField
-						control={form.control}
-						name="prompt"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Prompt</FormLabel>
-								<FormControl>
-									<Input placeholder="What orompt would you like to use?" {...field} />
-								</FormControl>
-								<FormDescription>
-									What prompt would you like to use?
-								</FormDescription>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<FormField
-						control={form.control}
-						name="model"
-						render={({ field }) => (
-							<FormItem className="space-y-3">
-								<FormLabel>Notify me about...</FormLabel>
-								<FormControl>
-									<RadioGroup
-										onValueChange={field.onChange}
-										defaultValue={field.value}
-										className="flex flex-col space-y-1"
-									>
-										<FormItem className="flex items-center space-x-3 space-y-0">
-											<FormControl>
-												<RadioGroupItem value="openai" />
-											</FormControl>
-											<FormLabel className="font-normal">
-												OpenAI
-											</FormLabel>
-										</FormItem>
-										<FormItem className="flex items-center space-x-3 space-y-0">
-											<FormControl>
-												<RadioGroupItem value="gemini" />
-											</FormControl>
-											<FormLabel className="font-normal">
-												Gemini
-											</FormLabel>
-										</FormItem>
-										<FormItem className="flex items-center space-x-3 space-y-0">
-											<FormControl>
-												<RadioGroupItem value="random" />
-											</FormControl>
-											<FormLabel className="font-normal">Random</FormLabel>
-										</FormItem>
-									</RadioGroup>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<Button type="submit">Submit</Button>
-				</form>
-			</Form>
+		<div className="flex flex-col justify-center h-[100vh]">
+			<div className="flex justify-center">
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 max-w-[500px] space-y-6">
+						<FormField
+							control={form.control}
+							name="prompt"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel className="text-3xl">Prompt</FormLabel>
+									<FormControl>
+										<Input placeholder="What prompt would you like to use?" {...field} />
+									</FormControl>
+									<FormDescription>
+										What prompt would you like to use?
+									</FormDescription>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="model"
+							render={({ field }) => (
+								<FormItem className="space-y-3">
+									<FormLabel>Which AI would you like to use?</FormLabel>
+									<FormControl>
+										<RadioGroup
+											onValueChange={field.onChange}
+											defaultValue={field.value}
+											className="flex flex-col space-y-1"
+										>
+											<FormItem className="flex items-center space-x-3 space-y-0">
+												<FormControl>
+													<RadioGroupItem value="openai" />
+												</FormControl>
+												<FormLabel className="font-normal">
+													OpenAI
+												</FormLabel>
+											</FormItem>
+											<FormItem className="flex items-center space-x-3 space-y-0">
+												<FormControl>
+													<RadioGroupItem value="gemini" />
+												</FormControl>
+												<FormLabel className="font-normal">
+													Gemini
+												</FormLabel>
+											</FormItem>
+											<FormItem className="flex items-center space-x-3 space-y-0">
+												<FormControl>
+													<RadioGroupItem value="random" />
+												</FormControl>
+												<FormLabel className="font-normal">Random</FormLabel>
+											</FormItem>
+										</RadioGroup>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">Submit</Button>
+					</form>
+				</Form>
+			</div>
 		</div>
 	);
 }
