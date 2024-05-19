@@ -29,7 +29,7 @@ const adminForm = z.object({
 })
 
 export function AdminPage() {
-	const [data, setData] = useState(null);
+	const [data, setData] = useState<any[]>([]);
 
 	useEffect(() => {
 		const getData = async () => {
