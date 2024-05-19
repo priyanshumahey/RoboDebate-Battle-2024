@@ -5,8 +5,8 @@ interface ChatMessageBubbleProps {
 }
 
 export function ChatMessageBubble(props: ChatMessageBubbleProps) {
-    const colorClassName = props.message.role === "bota" ? "rounded-br-2xl rounded-tr-2xl rounded-tl-2xl bg-red-300 text-black border"
-        : "rounded-bl-2xl rounded-tl-2xl rounded-tr-2xl bg-blue-300 text-black border";
+    const colorClassName = props.message.role === "bota" ? "rounded-lg bg-red-300 text-black border text-lg"
+        : "rounded-lg bg-blue-300 text-black border text-lg";
     const alignmentClassName = props.message.role === "bota" ? "mr-auto" : "ml-auto";
     const prefix = props.message.role === "bota" ? "Bot A:" : "Bot B:";
 

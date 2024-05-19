@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-
+ 
 import { Input } from "@/components/ui/input"
 import {
 	Card,
@@ -115,7 +115,7 @@ export default function Login() {
 		} else if (newCount > TotalPoints) {
 			newCount = TotalPoints
 		}
-	
+
 		setCount(newCount)
 	}
 
@@ -241,15 +241,15 @@ export default function Login() {
 						<h1 className="text-4xl font-bold w-full">Welcome, <span className="underline text-violet-500">{username}</span>!</h1>
 						<h2 className="text-2xl font-bold w-full">You are a <span className="text-violet-400">{role}</span>.</h2>
 						<h2 className="text-2xl font-bold w-full mt-8">You have {TotalPoints - points} points left.</h2>
-						<h2 className="text-2xl font-bold w-full mt-8">Which option would you like?</h2>
+						<h2 className="text-2xl font-bold w-full mt-8">Which bot would you like?</h2>
 						<div className="flex justify-center mt-6">
 							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border">Choice A</Button>
 							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border">Choice B</Button>
 						</div>
 						<div>
-							<Button className="m-4" onClick={()=> changeCount(1)}>-</Button>
-								<span className="m-4">{TotalPoints - count}</span>
-							<Button className="m-4" onClick={()=> changeCount(-1)}>+</Button>
+							<Button className="m-4" onClick={() => changeCount(1)}>-</Button>
+							<span className="m-4">{TotalPoints - count}</span>
+							<Button className="m-4" onClick={() => changeCount(-1)}>+</Button>
 						</div>
 						<Button className="m-4 w-4/5 sm:w-1/4 rounded-none bg-violet-500 hover:bg-violet-700 border">Submit</Button>
 					</div>
@@ -270,8 +270,8 @@ export default function Login() {
 						<h2 className="text-2xl font-bold w-full">You are a <span className="text-violet-400">{role}</span>.</h2>
 						<h2 className="text-2xl font-bold w-full mt-8">Which chatbot won?</h2>
 						<div className="flex justify-center mt-6">
-							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("A")}>Choice A</Button>
-							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("B")}>Choice B</Button>
+							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("A")}>Bot A</Button>
+							<Button className="w-1/2 h-80 rounded-none bg-violet-500 hover:bg-violet-700 border" onClick={() => sumbitJudge("B")}>Bot B</Button>
 						</div>
 					</div>
 				</div>
